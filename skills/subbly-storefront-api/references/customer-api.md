@@ -19,7 +19,7 @@ subblyApi.client.setAuth(accessToken)
 
 - In the browser, also save the token in the `subbly_access_token` cookie (path `/`). The cart widget reads this cookie, so the customer is signed in there too.
 - To sign out, call `subblyApi.client.setAuth('')` and clear the cookie. There is no sign-out endpoint.
-- On the server, do not call `setAuth`. The client is shared by all requests. Pass the header on each call instead: ``subblyApi.customers.me({ Authorization: `Bearer ${token}` })``. The `auth.*` wrappers on `subblyApi` take no `headers` argument. They do not need one.
+- On the server, do not call `setAuth`. The client is shared by all requests. Pass the header on each call instead: `subblyApi.customers.me({ Authorization: 'Bearer ' + accessToken })`. The `auth.*` wrappers on `subblyApi` take no `headers` argument. They do not need one.
 - An expired or missing token gives `code: 'unauthenticated'`.
 
 ## Auth

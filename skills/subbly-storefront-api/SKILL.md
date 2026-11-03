@@ -101,7 +101,7 @@ Each method returns a Promise. Use `async`/`await`.
 
 `product.bySlug`, `bundle.bySlug`, `metafield.byId` and `metafield.bySlug` use a list request. When nothing matches, they throw a plain `Error` (for example `Product with slug coffee-box not found.`), not an API error. Slugs are case-sensitive.
 
-**Customer access token.** `auth.login`, `register`, `otpLogin` and `social` return `{ accessToken, expiresIn }`. The client does not store the token for you. In the browser, call `subblyApi.client.setAuth(accessToken)` and keep the token in the `subbly_access_token` cookie, so the cart widget uses the same session. On the server, send ``{ Authorization: `Bearer ${token}` }`` in the `headers` argument of each call. Customer methods (`customers`, `subscriptions`, `addresses`, `wallet`, `pickupInfo`, `cart.attachCustomer`) need the token.
+**Customer access token.** `auth.login`, `register`, `otpLogin` and `social` return `{ accessToken, expiresIn }`. The client does not store the token for you. In the browser, call `subblyApi.client.setAuth(accessToken)` and keep the token in the `subbly_access_token` cookie, so the cart widget uses the same session. On the server, send `{ Authorization: 'Bearer ' + accessToken }` in the `headers` argument of each call. Customer methods (`customers`, `subscriptions`, `addresses`, `wallet`, `pickupInfo`, `cart.attachCustomer`) need the token.
 
 ## Raw client
 
