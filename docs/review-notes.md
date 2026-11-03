@@ -4,6 +4,8 @@ Paste the section for the directory into its submission form. Keep this file up 
 
 ## Claude plugin directory
 
+**Name.** `subbly` is the brand of the publisher, Subbly (https://www.subbly.co), the subscription commerce platform this plugin connects to. It is not related to the "subble" connector. The name matches the company, its domains (`subbly.co`, `subbly.dev`) and the MCP server host `mcp.subbly.dev`.
+
 **Network.** The plugin has one network endpoint: the `subbly` MCP server at `https://mcp.subbly.dev/mcp`, run by Subbly, the publisher of this plugin. The user signs in to their own Subbly account with OAuth 2.1 (PKCE, dynamic client registration). The plugin stores no credential and asks for no API key.
 
 **Credentials.** No part of the plugin reads environment variables, files or credentials from the user's machine. There are no hooks, scripts, commands or agents. The skills are Markdown only.

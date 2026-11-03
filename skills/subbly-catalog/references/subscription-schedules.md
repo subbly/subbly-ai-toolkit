@@ -8,10 +8,10 @@ Shipments always come after billing. A plan can have more than one shipment in e
 
 The `rebillingDay*` fields set the type.
 
-| Type | Merchant words | `rebillingDay*` | Trials |
+| Type | Merchant words | A `rebillingDay*` field | Trials |
 |---|---|---|---|
-| Independent cycles (adhoc) | "bills on the day they sign up" | not set | yes |
-| Synchronized cycles (anchored) | "everyone is billed on the 1st" | set | no |
+| Independent cycles (adhoc) | "bills on the day they sign up" | no | yes |
+| Synchronized cycles (anchored) | "everyone is billed on the 1st" | yes | no |
 
 ## Independent cycles (adhoc billing)
 
@@ -26,7 +26,7 @@ All entries in `shipmentSchedule` must use the same format. There are two format
 
 Example: monthly coffee, ships 5 days after billing.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 1
 shipmentSchedule: [{ addUnit: "day", addCount: 5 }]
 ```
@@ -42,7 +42,7 @@ With this format you can set `cutOffDays` and `cutOffTime`. `cutOffDays` is the 
 
 Example: monthly box, always ships on the 15th.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 1
 shipmentSchedule: [{ unitDay: 15, unitOffset: 0 }]
 cutOffDays: 5
@@ -54,7 +54,7 @@ Signup on Jan 8: ships Jan 15. Signup on Jan 12 (after the Jan 10 cut-off): ship
 
 Example: billed every 3 months, ships on the 1st of each month.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 3, anchorDate: "today"
 shipmentSchedule: [
   { unitDay: 1, unitOffset: 0 },
@@ -66,7 +66,7 @@ cutOffDays: 5
 
 Example: billed yearly (anchor Jan 1), ships quarterly, each shipment moves on its own.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 12, anchorDate: "today"
 shipmentSchedule: [
   { unitDay: 15, unitOffset: 2 },
@@ -99,7 +99,7 @@ Subscribers bill on the same day, but their cycles start at different times. Wee
 
 Example: monthly, billed on the 1st, ships on the 5th.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 1
 rebillingDayOfMonth: 1
 shipmentSchedule: [{ unitDay: 5, unitOffset: 0 }]
@@ -114,7 +114,7 @@ All subscribers share the same billing periods. There are no partial cycles. It 
 
 Example: billed every 3 months, ships monthly, all subscribers together.
 
-```
+```text
 frequencyUnit: "month", frequencyCount: 3, anchorDate: "2026-01-01"
 rebillingDayOfMonth: 1
 shipmentSchedule: [
