@@ -9,18 +9,13 @@ Read the hook types in the package declarations before you use a hook. This page
 Put `CartProvider` above the pages that use the cart. It loads the cart in the `subbly_cart_id` cookie (the same cookie the widget uses), or creates a cart.
 
 ```tsx
-'use client'
-
 import { CartProvider } from '@subbly/react'
-import { useRouter } from 'next/navigation'
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-
   return (
     <CartProvider
       onItemAdded={({ action }) => {
-        if (action === 'checkout') router.push('/checkout')
+        if (action === 'checkout') window.location.assign('/checkout')
       }}
     >
       {children}

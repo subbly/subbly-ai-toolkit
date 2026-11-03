@@ -1,6 +1,6 @@
 ---
 name: subbly-storefront-troubleshooting
-description: "Helps you check and fix the Subbly integration in storefront code: a React or Next.js app that uses `@subbly/react`, `subblyApi` and the hosted cart widget. Covers the API key and NEXT_PUBLIC_SUBBLY_API_KEY, client initialization, SubblyProvider, the cart widget script, and common errors: 'API client accessed before it was initialized', API key not found, useShop outside SubblyProvider, cart does not open, getWidget returns null, events do not fire, CartItemNotConfiguredError, 404 or slug not found, wrong currency or prices, and TypeScript import errors. Use when a developer reports that the Subbly cart, products or API calls do not work in their site, or asks to verify or restore the Subbly setup. For storefront code only. To read or change a live store (products, orders, subscribers), use the Subbly connector tools instead."
+description: "Helps you check and fix the Subbly integration in storefront code: a React app that uses `@subbly/react`, `subblyApi` and the hosted cart widget. Covers the Storefront API key, client initialization, SubblyProvider, the cart widget script, and common errors: 'API client accessed before it was initialized', missing apiKey, useShop outside SubblyProvider, cart does not open, getWidget returns null, events do not fire, CartItemNotConfiguredError, 404 or slug not found, wrong currency or prices, out of stock, 3-D Secure, and TypeScript errors. Use when a developer reports that the Subbly cart, products or API calls do not work in their site. For storefront code only. To read or change a live store, use the Subbly connector tools instead."
 ---
 
 # Subbly storefront troubleshooting
@@ -18,72 +18,22 @@ Use this skill to check a storefront that uses `@subbly/react` and the hosted ca
 Check each item in this order.
 
 1. **Package.** `@subbly/react` is in `package.json`. React 19 is a peer dependency.
-2. **API key.** `.env` (or the host's environment settings) has `NEXT_PUBLIC_SUBBLY_API_KEY` with a **Storefront** API key. Get it on the [API keys](https://subbly.co/admin/settings/api-keys) page in Subbly Admin. The `NEXT_PUBLIC_` prefix is necessary, because the browser reads the key. Restart the dev server after you change `.env`.
-3. **Client init module.** One module calls `subblyApi.initialize(...)`, usually `src/lib/subbly/api.ts`. The root layout imports it.
-4. **Provider.** The root layout wraps the app in `<SubblyProvider>` when the code uses `useShop`, `useGateways` or other shop hooks.
-5. **Widget script.** The root layout renders the cart widget script with `type="module"`, after `window.subblyConfig`.
-
-To restore items 3 and 5, run this in the project root. It installs `src/lib/subbly/api.ts`, `src/lib/subbly/subbly-script.tsx` and cookie helpers:
-
-```bash
-npx shadcn add https://registry.subbly.dev/r/subbly-lib.json
-```
-
-The command asks before it overwrites a file. Answer "no" for a file that the developer changed on purpose, and compare it with the reference below.
-
-## Reference setup (Next.js App Router)
-
-`src/lib/subbly/api.ts`:
-
-```ts
-import { subblyApi } from '@subbly/react'
-
-if (!process.env.NEXT_PUBLIC_SUBBLY_API_KEY) {
-  throw new Error('Subbly API key not found. Please add it to the .env file.')
-}
-
-subblyApi.initialize({
-  apiKey: process.env.NEXT_PUBLIC_SUBBLY_API_KEY,
-  apiUrl: process.env.NEXT_PUBLIC_SUBBLY_API_URL,
-})
-
-export { subblyApi }
-```
-
-`src/app/layout.tsx`:
-
-```tsx
-import { SubblyProvider } from '@subbly/react'
-import { SubblyScript } from '@/lib/subbly/subbly-script'
-import '@/lib/subbly/api'
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const apiKey = process.env.NEXT_PUBLIC_SUBBLY_API_KEY
-
-  return (
-    <html lang="en">
-      <body>
-        {apiKey && <SubblyScript apiKey={apiKey} />}
-        <SubblyProvider>{children}</SubblyProvider>
-      </body>
-    </html>
-  )
-}
-```
-
-For the `SubblyScript` component and the widget settings, see the `subbly-cart-and-checkout` skill.
+2. **API key.** The project passes a **Storefront** API key to `subblyApi.initialize` (and to `SubblyProvider` and `window.subblyConfig`). The key comes from the [API keys](https://subbly.co/admin/settings/api-keys) page in Subbly Admin. Do not open `.env` or other secret files, and do not print the key. Ask the user to confirm that the key is set, or check only that the setting name exists in the code. After a change to the key, rebuild or restart the app.
+3. **Client init module.** One module calls `subblyApi.initialize(...)`, and the app imports it once at start. See the `subbly-storefront-api` skill.
+4. **Provider.** The root component wraps the app in `<SubblyProvider>` when the code uses `useShop`, `useGateways` or other shop hooks.
+5. **Widget script.** The page sets `window.subblyConfig`, then loads the cart widget script with `type="module"`. See the `subbly-cart-and-checkout` skill.
 
 ## API client faults
 
 **"Subbly API client is access before it was initialized"** (the package spells it this way)
 
 - Cause: code called `subblyApi` before `initialize` ran.
-- Fix: import the init module (`import '@/lib/subbly/api'`) in the root layout. In server code (pages, route handlers), import `subblyApi` from the init module, not from `@subbly/react`. Server code does not render `SubblyProvider`, so the provider cannot initialize the client there.
+- Fix: import the init module before the first call, when the app starts. Code that runs outside React (for example, server-side data loading) does not render `SubblyProvider`, so it must import `subblyApi` from the init module.
 
-**"Subbly API key not found"**, **"Subbly API missing required `apiKey` option."** or **"Missing required apiKey config"**
+**"Subbly API missing required `apiKey` option."** or **"Missing required apiKey config"**
 
-- Cause: the env variable is empty, has another name, or the server did not restart.
-- Fix: set `NEXT_PUBLIC_SUBBLY_API_KEY`, then restart. `process.env.SUBBLY_API_KEY` (no prefix) is empty in the browser.
+- Cause: `initialize` or the widget got an empty key. The setting is empty, has another name, is not exposed to the browser by the build, or the app did not restart after a change.
+- Fix: make sure the project passes its Storefront key, then rebuild or restart. Do not print the key value to check it.
 
 **`initialize` seems to ignore a new key**
 
@@ -91,7 +41,7 @@ For the `SubblyScript` component and the widget settings, see the `subbly-cart-a
 
 **"useShop must be used within a &lt;SubblyProvider&gt;."**
 
-- Wrap the tree in `<SubblyProvider>`. `SubblyProvider` is a client component: render it in the layout, and keep server data loading outside it.
+- Wrap the tree in `<SubblyProvider>` in the root component.
 
 **401 or `unauthenticated` on customer calls**
 
@@ -101,7 +51,7 @@ For the `SubblyScript` component and the widget settings, see the `subbly-cart-a
 
 **The cart does not open, `getWidget()` returns `null`, no widget in the page**
 
-1. Check that the layout renders the script, and that `window.subblyConfig` is set before the script runs.
+1. Check that the page loads the script, and that `window.subblyConfig` is set before the script runs.
 2. Check the script URL: `https://assets.subbly.co/cart/cart-widget.js`, with `type="module"`.
 3. In the network tab, filter for `cart-widget.js`. The status must be 200.
 4. In the console, look for errors before the widget starts, for example a Content Security Policy that blocks `assets.subbly.co` or `api.subbly.co`.
@@ -151,7 +101,7 @@ For the `SubblyScript` component and the widget settings, see the `subbly-cart-a
 
 **Prices are in the wrong currency**
 
-- Send `{ 'x-currency': code }` in the `headers` argument of product and bundle calls. The cart has its own currency: change it with `updateCart({ currencyCode })` or `widget.setCurrency(code)`. See the `subbly-storefront-localization` skill.
+- Send `{ 'x-currency': code }` in the `headers` argument of product and bundle calls. The cart has its own currency: change it with `updateCart({ currencyCode })` or `widget.setCurrency(code)`.
 
 **Bundle items cannot be selected, or the bundle hook crashes**
 
@@ -164,19 +114,17 @@ For the `SubblyScript` component and the widget settings, see the `subbly-cart-a
 ## TypeScript faults
 
 - Import types from `@subbly/react` with `import type { ParentProduct, SubblyCart } from '@subbly/react'`.
-- Typed params use the enums: `ProductType.subscription` in a client component. In server code, use `'subscription' as ProductType` (see below).
+- Typed params use the enums: `ProductType.subscription`. In React Server Components, use `'subscription' as ProductType` (see below).
 - Pass `undefined`, not `null`, to skip an optional `params` argument: `subblyApi.product.bySlug(slug, undefined, headers)`.
 - `getCart()` and `getWidget()` can return `null`. Check the value before you use it.
 - Narrow a product with `product.type === 'subscription'` before you read `plans`, and with `'one_time'` before you read `variants`. The string comparison narrows the type and works in server and client code.
-- "You cannot dot into a client module from a server component" (or a similar Next.js error): server code read a hook, enum or helper from `@subbly/react`. On the server, only `subblyApi` is a real value. Use `import type`, compare with strings, or move the code into a `'use client'` component.
-- `next build` fails with a missing export from `@subbly/react` in a server component, while `tsc` passes: update `@subbly/react` to the latest version. Newer versions resolve client components correctly in server components.
+- An error about a client module or client reference in a React Server Component: server code read a hook, enum or helper from `@subbly/react`. There, only `subblyApi` is a real value. Use `import type`, compare with strings, or move the code into a component that runs in the browser.
 
 ## Error table
 
 | Error text | Cause | Fix |
 |---|---|---|
-| `Subbly API client is access before it was initialized...` | `initialize` did not run first | Import the init module in the layout and in server code |
-| `Subbly API key not found...` | Env variable missing | Set `NEXT_PUBLIC_SUBBLY_API_KEY` and restart |
+| `Subbly API client is access before it was initialized...` | `initialize` did not run first | Import the init module when the app starts |
 | ``Subbly API missing required `apiKey` option.`` | `initialize` got no key | Pass the key |
 | `useShop must be used within a <SubblyProvider>.` | No provider | Wrap the app in `SubblyProvider` |
 | `useCart must be used within a <CartProvider>.` | Headless cart hook without provider | Add `CartProvider`, or use `useSubblyCart` |

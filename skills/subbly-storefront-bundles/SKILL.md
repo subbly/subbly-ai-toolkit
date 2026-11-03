@@ -11,7 +11,7 @@ This skill helps you build bundle pages on a custom storefront with `@subbly/rea
 
 - The project must have `@subbly/react` installed and `subblyApi` initialized. For setup and error handling, see the `subbly-storefront-api` skill.
 - Import hooks, helpers and types from `@subbly/react`.
-- In server code, import `subblyApi` from the module of your project that calls `subblyApi.initialize()`. The examples use `@/lib/subbly/api`.
+- Import `subblyApi` from the module of your project that calls `subblyApi.initialize()`. The examples import it as `./subbly`.
 - Every price is an integer in minor units. Format it with `useCurrencyFormatter().formatAmount(amount)`.
 - For the cart and the widget, see `subbly-cart-and-checkout`.
 
@@ -78,7 +78,7 @@ For props, return values and behaviour, read `references/hooks.md`.
 
 ## Build a bundle page
 
-1. Load the bundle on the server with `bySlug` or `byId`. Pass it to a client component.
+1. Load the bundle with `bySlug` or `byId` (on the server when the site renders pages there). Pass it to the bundle component as a prop.
 2. Pick the mode:
    - `configurable === false`: fixed bundle. Show the plan picker, the quantity and the button.
    - `selectionType === 'variant'`: load items with `listItems`. Use `useBundleItemsForm`.
@@ -117,10 +117,6 @@ Shortcut: when the hosted cart widget is on the page, `useSubblyCart().addToCart
 - Rendering a gallery above a customizable `variant` or `product` bundle. The items carry their own images. Show the bundle gallery for fixed bundles and `single_product` bundles.
 - Calling the hooks with a bundle that has no plans or no rulesets. `useBundleForm` and `useBundleGroupForm` read the first plan and the first ruleset, and fail without them.
 - Showing item prices when `priceType` is `total` or `per_item`. Use `showItemPrice` and `showItemExtraPrice` from the item hooks.
-
-## Prebuilt components
-
-Subbly publishes a `customize-bundle-section` shadcn/ui block in a public registry. It renders every bundle mode. For install steps and caveats, read `references/bundle-page.md`.
 
 ## References
 

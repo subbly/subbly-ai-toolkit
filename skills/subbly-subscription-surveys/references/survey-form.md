@@ -5,8 +5,6 @@ An unstyled `before_cart` survey form. It keeps one `SubscriptionSurveyOption` p
 ## Form
 
 ```tsx
-'use client'
-
 import { useMemo, useState, type FormEvent } from 'react'
 import { useCurrencyFormatter, useSubblyCart } from '@subbly/react'
 import { validateSurvey } from '@subbly/kit'
@@ -80,13 +78,11 @@ export function SurveyForm ({ survey, planId }: { survey: Survey; planId: number
 }
 ```
 
-`useCurrencyFormatter` uses `en-US` and `USD` by default. Call `setCurrency(locale, currencyCode)` with the cart currency. See the `subbly-storefront-localization` skill.
+`useCurrencyFormatter` uses `en-US` and `USD` by default. Call `setCurrency(locale, currencyCode)` with the cart currency.
 
 ## Question renderer
 
 ```tsx
-'use client'
-
 import { SurveyQuestionType } from '@subbly/react'
 import type { SubscriptionSurveyOption, SurveyQuestion } from '@subbly/react'
 

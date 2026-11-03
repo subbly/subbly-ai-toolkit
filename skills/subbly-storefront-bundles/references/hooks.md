@@ -1,6 +1,6 @@
 # Bundle hooks
 
-All hooks come from `@subbly/react`. Use them only in client components (`'use client'`). Each hook keeps its own state. When the `bundle` prop changes to another bundle, remount the component (for example with `key={bundle.id}`).
+All hooks come from `@subbly/react`. They are React hooks: call them in components that run in the browser. Each hook keeps its own state. When the `bundle` prop changes to another bundle, remount the component (for example with `key={bundle.id}`).
 
 ## useBundleForm
 

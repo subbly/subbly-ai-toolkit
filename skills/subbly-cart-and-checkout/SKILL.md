@@ -10,8 +10,8 @@ The Subbly cart widget is a hosted cart, product configurator and checkout. One 
 ## Before you start
 
 - **Client setup.** Initialize `subblyApi` first. See the `subbly-storefront-api` skill.
-- **Storefront API key.** The widget uses the same Storefront API key as `subblyApi` (`NEXT_PUBLIC_SUBBLY_API_KEY` in Next.js).
-- **Browser only.** The widget lives on `window.subblyCart`. `getWidget()` and `getCart()` throw on the server. Call them in event handlers and effects, not during render: `'use client'` components also render on the server.
+- **Storefront API key.** The widget uses the same Storefront API key as `subblyApi` (the key you pass to `initialize`).
+- **Browser only.** The widget lives on `window.subblyCart`. `getWidget()` and `getCart()` throw on the server. Call them in event handlers and effects, not during render. With server rendering, components also render on the server.
 - **IDs.** The cart adds a **plan ID** (subscription) or a **variant ID** (one-time product), not the parent product ID. To get these IDs, see `subbly-storefront-products` and `subbly-storefront-bundles`.
 - **Amounts.** All amounts are integers in minor units: `1999` is 19.99.
 
@@ -33,40 +33,13 @@ Write `window.subblyConfig` first. Then load the script. The widget reads the co
 <script type="module" src="https://assets.subbly.co/cart/cart-widget.js"></script>
 ```
 
-In Next.js (App Router), put the two scripts in a component and render it in the root layout:
-
-```tsx
-// src/lib/subbly/subbly-script.tsx
-import Script from 'next/script'
-
-export function SubblyScript({ apiKey }: { apiKey: string }) {
-  const config = {
-    apiKey,
-    settings: {
-      interceptProductLinks: true,
-      cartToggleEl: '.subbly-cart',
-      cartCounterEl: '.subbly-cart-product-count',
-    },
-  }
-
-  return (
-    <>
-      <Script id="subblyConfigScript">{`window.subblyConfig = ${JSON.stringify(config)}`}</Script>
-      <Script id="subblyCartWidgetScript" type="module" src="https://assets.subbly.co/cart/cart-widget.js" />
-    </>
-  )
-}
-```
-
-To install this component with the client setup, run `npx shadcn add https://registry.subbly.dev/r/subbly-lib.json`. Its `SubblyScript` also takes `apiUrl`, `languageCode`, `checkoutUrl`, `cartSummaryUrl`, `disableUrls` and `settings` props.
+In a React app, render the same two tags in the root component, or put them in the page HTML. `window.subblyConfig` must exist before the widget script runs. Other config keys include `apiUrl`, `languageCode`, `checkoutUrl`, `cartSummaryUrl` and `disableUrls`; see `references/widget-reference.md`.
 
 The script loads asynchronously. `window.subblyCart` is set when the window event `subbly-cart-initialized` fires. Until then, `getWidget()` returns `null`. The widget event `CART_READY` fires before your code can subscribe, so do not wait for it. Wait for `subbly-cart-initialized`, then read `subblyCart.cart`.
 
 ## Use the cart from React
 
 ```tsx
-'use client'
-
 import { useSubblyCart } from '@subbly/react'
 
 export function AddToCartButton({ planId }: { planId: number }) {
@@ -127,8 +100,6 @@ await widget?.signOut()
 To react to cart events in React, use `useSubblyCartEventEffect`:
 
 ```tsx
-'use client'
-
 import { useSubblyCartEventEffect } from '@subbly/react'
 
 export function PurchaseTracker() {
@@ -151,8 +122,6 @@ Event names are upper case: `CART_UPDATED`, not `cart_updated`. For all methods,
 A buy link sends the shopper straight to checkout with one item. Use it for "Buy now" buttons, emails and social posts.
 
 ```tsx
-'use client'
-
 import { useBuyLink } from '@subbly/react'
 
 export function BuyNowLink({ planId }: { planId: number }) {

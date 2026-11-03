@@ -155,7 +155,3 @@ Action responses do not include expands. Load the subscription again after an ac
 | `client.wallet.setDefault(paymentMethodId)` | Sets the default method. It does not change existing subscriptions: use `subscriptions.updatePaymentMethod` for them. |
 | `client.wallet.delete(paymentMethodId)` | Refused with 403 for the last method of a customer with active subscriptions. Handle the rejection. |
 | `client.pickupInfo.update(id, payload)`, `client.pickupInfo.delete(id)` | See `cart-and-checkout-api.md`. |
-
-### React hooks
-
-`@subbly/react` also has account hooks: `useCustomerProfile`, `useCustomerAddresses`, `useCustomerSubscriptions`, `useSubscriptionActions`, `useCustomerOrders`, `useCustomerInvoices` and others. These hooks do not call the Storefront API directly. They fetch your own route handlers under `/api/account` (change the path with `<CustomerPortalProvider basePath>`). Your route handlers then call the methods on this page with the customer token. Use the hooks only when your app has those route handlers.

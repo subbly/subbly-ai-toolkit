@@ -26,7 +26,7 @@
     "defaultPrompt": [
       "Which subscriptions renew in the next 7 days?",
       "Create a monthly coffee subscription with 3-, 6- and 12-month plans.",
-      "Add a Subbly product page and cart to my Next.js storefront."
+      "Add a Subbly product page and cart to my React storefront."
     ]
   }
 }

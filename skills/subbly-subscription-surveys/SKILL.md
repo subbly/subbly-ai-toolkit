@@ -55,8 +55,6 @@ Use the **answer** ID (`question.answers[n].id`), not the product ID.
 ## Add a plan with answers (before_cart)
 
 ```tsx
-'use client'
-
 import { useSubblyCart } from '@subbly/react'
 import type { SubscriptionSurveyOption } from '@subbly/react'
 

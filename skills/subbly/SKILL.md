@@ -56,7 +56,7 @@ Read the skill for the task before you call a tool that changes data.
 | Webhook endpoints, events and failed deliveries | `subbly-webhooks` |
 | Reports and questions such as how many, how much, top, why: subscribers, churn, revenue, failed payments, orders to ship, funnels, surveys | `subbly-store-insights` |
 
-Developer skills are for code that uses `@subbly/react` and `@subbly/api-client` (custom storefronts, Next.js). Use them when the user writes or fixes storefront code, not to change the live store.
+Developer skills are for code that uses `@subbly/react` and `@subbly/api-client` (custom storefronts). Use them when the user writes or fixes storefront code, not to change the live store.
 
 | Task | Skill |
 |---|---|
@@ -66,8 +66,6 @@ Developer skills are for code that uses `@subbly/react` and `@subbly/api-client`
 | Cart widget, add to cart, coupons, buy links, checkout | `subbly-cart-and-checkout` |
 | Show or collect custom field values in the storefront | `subbly-storefront-metadata` |
 | Subscription survey forms | `subbly-subscription-surveys` |
-| Lead capture form | `subbly-lead-capture` |
-| Languages and currencies | `subbly-storefront-localization` |
 | Setup errors and fixes | `subbly-storefront-troubleshooting` |
 
 For a quick look-up of one record, use the tools directly. For counts, totals and reports, use `subbly-store-insights`. Lists have pages of at most 100 records, and `pagination.total` gives the full count.

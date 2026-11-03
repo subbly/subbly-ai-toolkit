@@ -1,34 +1,23 @@
 # Product pages and components
 
-These examples use the Next.js App Router. They are starting points: change the markup and styles to match the site. `@/lib/subbly/api` stands for the module of your project that initializes `subblyApi`.
+These examples are starting points: change the markup and styles to match the site. `./subbly` stands for the module of your project that initializes `subblyApi`.
 
-## Product page (server)
+## Load the product
 
-Load the product on the server for SEO. Pass it to a client component for the form.
+```ts
+import { subblyApi } from './subbly'
 
-```tsx
-// app/products/[slug]/page.tsx
-import { notFound } from 'next/navigation'
-import { subblyApi } from '@/lib/subbly/api'
-import { ProductDetails } from '@/components/product-details'
-
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const product = await subblyApi.product.bySlug(slug).catch(() => null)
-
-  if (!product) notFound()
-
-  return <ProductDetails product={product} />
-}
+const product = await subblyApi.product.bySlug(slug).catch(() => null)
+// null: no published product has this slug. Show your "not found" page.
 ```
+
+Load it where the app loads page data. When the site renders pages on a server, load it there for SEO, and pass it to `ProductDetails` as a prop.
 
 If products and bundles share one URL pattern, try `subblyApi.product.bySlug` first. If it throws, try `subblyApi.bundle.bySlug`. Render the matching component. See `subbly-storefront-bundles`.
 
-## Product details (client)
+## Product details
 
 ```tsx
-'use client'
-
 import {
   ProductType,
   useCurrencyFormatter,
@@ -85,8 +74,6 @@ Sanitize `description` before you render it as HTML if your site does not trust 
 A subscription product can have many plans (billing frequency, prepaid terms, trials).
 
 ```tsx
-'use client'
-
 import { useCurrencyFormatter, type ProductPlan } from '@subbly/react'
 
 type Props = { plans: ProductPlan[]; value: number | null; onChange: (id: number) => void }
@@ -124,8 +111,6 @@ Put the frequency text through your i18n library on a translated site.
 Use one control per option (Size, Colour). Find the variant that matches all chosen values.
 
 ```tsx
-'use client'
-
 import type { ProductOption, ProductVariantCombination } from '@subbly/react'
 
 type Props = {
@@ -173,18 +158,15 @@ export function VariantPicker({ options, combinations, value, onChange }: Props)
 ## Product grid
 
 ```tsx
-// app/shop/page.tsx
-import { subblyApi } from '@/lib/subbly/api'
-import { ProductCard } from '@/components/product-card'
+import type { ParentProduct, Pagination } from '@subbly/react'
+import { ProductCard } from './product-card'
 
-export default async function ShopPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
-  const page = Number((await searchParams).page ?? 1)
-  const { data, pagination } = await subblyApi.product.list({ page, perPage: 12 })
-
+// Load one page of products: await subblyApi.product.list({ page, perPage: 12 })
+export function ProductGrid({ data, pagination }: { data: ParentProduct[]; pagination: Pagination }) {
   return (
     <>
       <div className="grid">{data.map((p) => <ProductCard key={p.id} product={p} />)}</div>
-      {pagination.currentPage < pagination.lastPage && <a href={`?page=${page + 1}`}>Next page</a>}
+      {pagination.currentPage < pagination.lastPage && <a href={`?page=${pagination.currentPage + 1}`}>Next page</a>}
     </>
   )
 }
@@ -192,33 +174,3 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
 In `ProductCard`, link to `/products/${product.slug}` and show the lowest price of `product.variants` or `product.plans`.
 
-## Prebuilt registry components
-
-Subbly publishes shadcn/ui components in a public registry. Use them when the project already uses shadcn/ui and Tailwind CSS.
-
-1. Add the registry to `components.json`:
-
-   ```json
-   { "registries": { "@subbly": "https://registry.subbly.dev/r/{name}.json" } }
-   ```
-
-2. Install the block:
-
-   ```bash
-   npx shadcn@latest add @subbly/product-info-section
-   ```
-
-| Item | What it adds |
-|---|---|
-| `product-info-section` | A full product section: gallery, name, description, plan picker, variant selector, quantity and add-to-cart button. Installs the items below. |
-| `variant-selector` | Dropdown and radio variant selectors. |
-| `plan-option-card` | A card for one subscription plan. |
-| `quantity-selector` | A quantity input with plus and minus buttons. |
-| `add-to-cart-button` | A button that calls `addToCart` with a `ConfigureItemPayload`. |
-| `hooks` | `useFormatAmount`, a price formatter built on `next-intl`. |
-
-After the install:
-
-- Read the installed files under `src/components/subbly/`. The project owns them. Change them to match the site design.
-- The `useFormatAmount` hook needs `next-intl` to be set up. It divides by 100, and `NEXT_PUBLIC_SHOP_CURRENCY` overrides the currency argument. For currencies without decimals or for a multi-currency site, use `useCurrencyFormatter` instead. See `subbly-storefront-localization`.
-- Render the section with `<ProductInfoSection product={product} />` in the product page.

@@ -1,6 +1,6 @@
 ---
 name: subbly-subscriptions
-description: "Find and manage Subbly subscriptions and subscribers: pause, skip a month, resume, cancel, undo a cancellation, reactivate, change plan or billing frequency, swap box contents or size, add or remove items and add-ons, change the next billing date, quantity, shipping address or payment method, apply or remove a discount, and create a subscription for a customer. Also renewal and churn questions, such as who renews this week or why someone cancelled. Use when the merchant talks about a subscriber, member, recurring order or renewal."
+description: "Find and manage Subbly subscriptions and subscribers: pause, skip a month, resume, cancel, undo a cancellation, reactivate, change plan or billing frequency, swap box contents or size, add or remove items and add-ons, change the next billing date, quantity, shipping address or payment method, apply or remove a discount on the subscription or on one item, and create a subscription for a customer. Also renewal and churn questions, such as who renews this week or why someone cancelled. Use when the merchant talks about a subscriber, member, recurring order or renewal."
 ---
 
 # Subbly subscriptions
@@ -46,8 +46,9 @@ Load the subscription with `get_subscription` before each change. Tell the user 
 | Change a one-time item's variant (size, flavor) | `change_subscription_item_variant` | |
 | Ship to another saved address or pickup point | `update_subscription_address` | Needs an address ID and a shipping method ID. To fix the text of the address, use `update_address`; that changes every subscription and order that uses it. |
 | Bill another saved card | `update_subscription_payment_method` | The payment method must belong to the customer and support the currency. |
-| Add a discount | `apply_subscription_discount` | See "Discounts". |
-| Remove a discount | `remove_subscription_discount` | Use the discount ID from the subscription's `discounts`, not the coupon ID. |
+| Add a discount to the subscription | `apply_subscription_discount` | See "Discounts". |
+| Add a discount to one item | `apply_subscription_item_discount` | See "Discounts". |
+| Remove a discount | `remove_subscription_discount` or `remove_subscription_item_discount` | Use the discount ID from the `discounts` of the subscription or the item, not the coupon ID. |
 
 ### Change the plan or billing frequency
 
@@ -76,6 +77,10 @@ A scheduled cancellation can be undone with `undo_subscription_cancellation` unt
 - A custom discount: `type: discount`, `percentOff` or `amountOff` (minor units), and `duration` (`once` or `forever`).
 
 A subscription has at most one discount of each type. To change it, remove the current one first.
+
+**One item only.** `apply_subscription_item_discount` puts a custom discount on one item: `type: discount`, `percentOff` or `amountOff` (not both), and `duration`: `once` (the next renewal that bills the item) or `forever`. `amountOff` is in minor units of the shop's base currency; Subbly converts it to the subscription currency at billing. Use it when the merchant says "10% off the coffee, not the add-ons". An item has one custom discount at a time; remove it first to change it. Coupons go on the whole subscription only.
+
+**Remove with care.** Some items are gifts that a coupon added at 100% off. If you remove that discount with `remove_subscription_item_discount`, the gift stays on the subscription and is billed at full price on each renewal, even after the coupon ends. To take a gift away, use `delete_subscription_item`. Tell the user which one happens, and get an explicit "yes".
 
 ## Create a subscription
 

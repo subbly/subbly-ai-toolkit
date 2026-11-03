@@ -1,21 +1,16 @@
 # Bundle pages
 
-These examples use the Next.js App Router. They are starting points: change the markup and styles to match the site. `@/lib/subbly/api` stands for the module of your project that initializes `subblyApi`. In client components, `subblyApi` from `@subbly/react` works after that module (or `SubblyProvider`) has run.
+These examples are starting points: change the markup and styles to match the site. `./subbly` stands for the module of your project that initializes `subblyApi`.
 
-## Page (server)
+## Page
 
 ```tsx
-// app/bundles/[slug]/page.tsx
-import { notFound } from 'next/navigation'
-import { subblyApi } from '@/lib/subbly/api'
-import { BundleConfigurator } from '@/components/bundle-configurator'
+import type { Bundle } from '@subbly/react'
+import { BundleConfigurator } from './bundle-configurator'
 
-export default async function BundlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const bundle = await subblyApi.bundle.bySlug(slug).catch(() => null)
-
-  if (!bundle) notFound()
-
+// Load the bundle first: await subblyApi.bundle.bySlug(slug).catch(() => null)
+// null means no published bundle has this slug: show your "not found" page.
+export function BundlePage({ bundle }: { bundle: Bundle }) {
   const showGallery = !bundle.configurable || bundle.selectionType === 'single_product'
 
   return (
@@ -28,13 +23,11 @@ export default async function BundlePage({ params }: { params: Promise<{ slug: s
 }
 ```
 
-If products and bundles share one URL pattern (for example `/products/[slug]`), try `subblyApi.product.bySlug` first. If it throws, try `subblyApi.bundle.bySlug`.
+If products and bundles share one URL pattern, try `subblyApi.product.bySlug` first. If it throws, try `subblyApi.bundle.bySlug`.
 
-## Pick the mode (client)
+## Pick the mode
 
 ```tsx
-'use client'
-
 import type { Bundle } from '@subbly/react'
 import { FixedBundle } from './fixed-bundle'
 import { ItemListBundle } from './item-list-bundle'
@@ -50,8 +43,6 @@ export function BundleConfigurator({ bundle }: { bundle: Bundle }) {
 ## Shared plan picker
 
 ```tsx
-'use client'
-
 import { useCurrencyFormatter, type BundlePlanProduct, type PlanPriceCalculatorMap } from '@subbly/react'
 
 type Props = {
@@ -88,8 +79,6 @@ export function BundlePlanPicker({ options, value, subtotal, calculators, hidePr
 ## Fixed bundle
 
 ```tsx
-'use client'
-
 import { useBundleForm, type Bundle } from '@subbly/react'
 import { BundlePlanPicker } from './bundle-plan-picker'
 
@@ -117,8 +106,6 @@ If `quantitySelectors` is set, add a quantity choice with `updateForm({ quantity
 ## Item list bundle (`selectionType: 'variant'`)
 
 ```tsx
-'use client'
-
 import { useEffect, useState } from 'react'
 import {
   subblyApi, useBundleForm, useBundleItemsForm, useBundleValidation, useCurrencyFormatter,
@@ -212,8 +199,6 @@ For a `two_step` bundle, show the size buttons first. Show the item list after t
 ## Grouped bundle (`selectionType: 'product'` or `'single_product'`)
 
 ```tsx
-'use client'
-
 import { useEffect, useState } from 'react'
 import {
   subblyApi, useBundleForm, useBundleProductGroupedItemsForm, useBundleValidation,
@@ -323,27 +308,3 @@ const { subtotal, discount, pricePerItem } = useBundleReceipt({ bundle, form, ru
 
 Show `subtotal` as the box price and `discount` as the saving. `quote.taxAmount` and `quote.taxInclusive` give the tax details.
 
-## Prebuilt registry block
-
-Subbly publishes a `customize-bundle-section` shadcn/ui block. It renders fixed, item list and grouped bundles, with sizes, plans, preferences, a selection progress bar and a receipt.
-
-1. Add the registry to `components.json`:
-
-   ```json
-   { "registries": { "@subbly": "https://registry.subbly.dev/r/{name}.json" } }
-   ```
-
-2. Install the block:
-
-   ```bash
-   npx shadcn@latest add @subbly/customize-bundle-section
-   ```
-
-3. Render it: `<CustomizeBundleSection bundle={bundle} groupItemsByProduct />`. Props: `bundle`, `groupItemsByProduct?` (show a `variant` bundle grouped by product), `allowMultipleItemsInGroup?`.
-
-After the install:
-
-- The project owns the files under `src/components/subbly/bundle/`. Change them to match the site design.
-- The block loads items, groups and quotes with `@tanstack/react-query`. Wrap the app in a `QueryClientProvider`.
-- The price formatter of the block needs `next-intl`. See `subbly-storefront-localization`.
-- The preference picker of the block calls `updatePreferences` only. Add `updateForm({ preferences })` so the preferences reach the cart.

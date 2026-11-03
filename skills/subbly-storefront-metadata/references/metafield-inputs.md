@@ -5,8 +5,6 @@ Unstyled starting points. Change the markup and styles to match the site. Every 
 ## One input for every metafield
 
 ```tsx
-'use client'
-
 import type { Metafield, MetadataObject } from '@subbly/react'
 
 type Values = MetadataObject['values']
@@ -147,8 +145,6 @@ function PresetInput ({ metafield, values, onChange }: Props) {
 The example loads metafields by slug, keeps the values per metafield, and sends them with the cart item. Use the product hooks from the `subbly-storefront-products` skill for variant selection in a real page.
 
 ```tsx
-'use client'
-
 import { useEffect, useState } from 'react'
 import { subblyApi, useSubblyCart } from '@subbly/react'
 import type { Metafield, MetadataObject, ProductOneTime } from '@subbly/react'
@@ -205,8 +201,6 @@ For an order-wide field (for example delivery notes), render the same `Metafield
 The `subblyApi.cart` methods expand `items.metadata` and `metadata` by default. The widget cart from `getCart()` has the same fields.
 
 ```tsx
-'use client'
-
 import { useEffect, useState } from 'react'
 import { formatMetafieldList, useSubblyCart, type SubblyCart } from '@subbly/react'
 

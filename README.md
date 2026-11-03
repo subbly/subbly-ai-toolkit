@@ -35,7 +35,7 @@ The plugin connects to one network endpoint, `https://mcp.subbly.dev/mcp`, with 
 - "Which subscriptions renew in the next 7 days?"
 - "Create a monthly coffee subscription with 3-, 6- and 12-month plans."
 - "Skip next month's box for jane@example.com."
-- "Add a Subbly product page and cart to my Next.js storefront."
+- "Add a Subbly product page and cart to my React storefront."
 
 ## Skills
 
@@ -43,7 +43,7 @@ The plugin connects to one network endpoint, `https://mcp.subbly.dev/mcp`, with 
 |---|---|
 | Start here | `subbly` |
 | Merchants (uses the connector) | `subbly-catalog`, `subbly-subscriptions`, `subbly-customers-and-orders`, `subbly-coupons`, `subbly-webhooks`, `subbly-store-insights` |
-| Developers (storefront code with `@subbly/react`) | `subbly-storefront-api`, `subbly-storefront-products`, `subbly-storefront-bundles`, `subbly-cart-and-checkout`, `subbly-storefront-metadata`, `subbly-subscription-surveys`, `subbly-lead-capture`, `subbly-storefront-localization`, `subbly-storefront-troubleshooting` |
+| Developers (storefront code with `@subbly/react`) | `subbly-storefront-api`, `subbly-storefront-products`, `subbly-storefront-bundles`, `subbly-cart-and-checkout`, `subbly-storefront-metadata`, `subbly-subscription-surveys`, `subbly-storefront-troubleshooting` |
 
 ## Safety
 

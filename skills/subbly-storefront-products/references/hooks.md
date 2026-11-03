@@ -1,6 +1,6 @@
 # Product hooks
 
-All hooks come from `@subbly/react`. Use them only in client components (`'use client'`).
+All hooks come from `@subbly/react`. They are React hooks: call them in components that run in the browser.
 
 ## useProductForm
 
@@ -97,7 +97,7 @@ formatBillingFrequency(plan.frequencyUnit, plan.frequencyCount)
 ```
 
 - The arguments are the unit first, then the count. It does not take a plan object.
-- The output is English only and the helper is deprecated. For a translated site, build the label from `frequencyCount` and `frequencyUnit` with your i18n library. See `subbly-storefront-localization`.
+- The output is English only and the helper is deprecated. For a translated site, build the label from `frequencyCount` and `frequencyUnit` with your i18n library.
 
 ## useCurrencyFormatter (from the currency group)
 
@@ -109,4 +109,4 @@ setCurrency('de-DE', 'EUR') // locale first, then currency code
 ```
 
 - It divides by the minor unit of the currency, so it is correct for currencies without decimals.
-- The state is local to the component that calls the hook. To share one currency across the page, see `subbly-storefront-localization`.
+- The state is local to the component that calls the hook. To use one currency across the page, call `setCurrency` with the cart currency in each component, or keep the currency in your own React context.

@@ -156,7 +156,7 @@ Saves an email as a lead in Subbly.
 | `lastName?` | string or null | Maximum 255 characters. |
 | `metadata?` | object | Key-value pairs. Maximum 50 entries. |
 
-Response: `id`, `email`, `firstName`, `lastName`, `ipAddress`, `userAgent`. For a complete newsletter form, see the `subbly-lead-capture` skill.
+Response: `id`, `email`, `firstName`, `lastName`, `ipAddress`, `userAgent`.
 
 ## Stock
 

@@ -11,9 +11,9 @@ This skill helps you show Subbly products on a custom storefront and add them to
 
 - The project must have `@subbly/react` installed and `subblyApi` initialized. For setup, the full method list and error handling, see the `subbly-storefront-api` skill.
 - Import hooks, helpers, enums and types from `@subbly/react`. It re-exports every type from `@subbly/api-client`.
-- In server code, import `subblyApi` from the module of your project that calls `subblyApi.initialize()`. The examples use `@/lib/subbly/api` for that module.
+- Import `subblyApi` from the module of your project that calls `subblyApi.initialize()`. The examples import it as `./subbly`.
 - Every price is an integer in minor units: `1999` means 19.99. Format prices before you show them. `useCurrencyFormatter().formatAmount(amount)` does this.
-- To show prices in another currency, see `subbly-storefront-localization`.
+- To price a response in another shop currency, send the `x-currency` header. See "Currency" in the `subbly-storefront-api` skill.
 
 ## Product model
 
@@ -50,9 +50,8 @@ The `subblyApi.product` methods add default expands for you: parents get `varian
 
 ```ts
 import type { ProductType } from '@subbly/react'
-import { subblyApi } from '@/lib/subbly/api'
+import { subblyApi } from './subbly'
 
-// Server code: cast the string. In a client component, ProductType.subscription also works.
 const { data, pagination } = await subblyApi.product.list({
   type: 'subscription' as ProductType,
   tags: ['featured'],
@@ -62,7 +61,7 @@ const { data, pagination } = await subblyApi.product.list({
 
 Rules:
 
-- The `type` filter is typed as the `ProductType` enum, so a bare string literal fails type checking. In a client component, pass `ProductType.subscription`. In server code, the enum is a client reference and Next.js throws when you read it, so pass `'subscription' as ProductType` (with `import type`).
+- The `type` filter is typed as the `ProductType` enum, so a bare string literal fails type checking. Pass `ProductType.subscription`. In React Server Components the enum is not available at run time, so pass `'subscription' as ProductType` (with `import type`) there.
 - Tags filter the list. The product response does not contain tags.
 - If you pass `expand`, it replaces the default expand list. Include `variants`, `plans` and `metadata` again when you need them.
 - `bySlug` throws an `Error` when no product has that slug. Catch it and show a "not found" page.
@@ -86,8 +85,6 @@ For return values, behaviour and examples, read `references/hooks.md`.
 `useProductForm` preselects the first child that is in stock. Its `addToCart()` sends `{ productId, quantity }` through `useSubblyCart().addToCart`. For the cart and widget, see `subbly-cart-and-checkout`.
 
 ```tsx
-'use client'
-
 import { useProductForm, type ParentProduct } from '@subbly/react'
 
 export function BuyButton({ product }: { product: ParentProduct }) {
@@ -119,16 +116,12 @@ Rules:
 
 For payloads and examples, read `references/special-products.md`.
 
-## Prebuilt components
-
-Subbly publishes shadcn/ui components for product pages in a public registry at `https://registry.subbly.dev`. The `product-info-section` block renders the name, description, gallery, plan picker, variant selector, quantity and add-to-cart button. For install steps and caveats, read `references/product-page.md`.
-
 ## Common mistakes
 
 - Sending the parent product ID to the cart. Send the variant or plan ID.
 - Dividing by 100 to format money. Some currencies have no minor unit. Use `formatAmount`.
 - Reading `product.plans` before you narrow `product.type`.
-- Calling `useProductForm` in a server component. Hooks need a `'use client'` component. Load the product on the server and pass it as a prop.
+- Calling `useProductForm` outside a component that runs in the browser. Load the product first and pass it as a prop.
 
 ## References
 

@@ -28,8 +28,6 @@ A **metafield** is the definition of a custom field: its name, slug, data type a
 Use the helpers from `@subbly/react` for a simple list:
 
 ```tsx
-'use client'
-
 import { formatMetafieldList, hasVisibleMetafields } from '@subbly/react'
 import type { ParentProduct } from '@subbly/react'
 
@@ -49,7 +47,7 @@ export function ProductSpecs ({ product }: { product: ParentProduct }) {
 }
 ```
 
-- The helpers are client-side exports. In a server component, `@subbly/react` gives only `subblyApi` at runtime, so keep `'use client'` on components that call them.
+- In React Server Components, the helpers are not available at run time. Call them in components that run in the browser.
 - `formatMetafieldList(metadata)` returns one line per field: `{ id, name, value, oneLine }`. It joins multiple values with a comma. It adds the unit. It formats `date` and `datetime` as `dd MMM yyyy`.
 - It skips fields with no values. It also skips `multi_line_text`, `rich_text`, `boolean`, `color`, `rating`, `url` and `json`. Render those types yourself if you need them.
 - `formatMetafieldValue(value, dataType, unit?)` formats one value.
@@ -89,8 +87,6 @@ The preset value ID is `metafield.values[n].id`. Send every value as a string, a
 Add `metadata` to the `addToCart` payload. It works for one-time variants, subscription plans and bundle plans.
 
 ```tsx
-'use client'
-
 import { useSubblyCart } from '@subbly/react'
 
 export function AddEngravedRing ({ variantId, engravingId }: { variantId: number; engravingId: number }) {

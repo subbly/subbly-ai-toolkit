@@ -1,6 +1,6 @@
 ---
 name: subbly-storefront-api
-description: "Helps you write storefront code that calls the Subbly Storefront API with `subblyApi` from `@subbly/react` or with `SubblyApiClient` from `@subbly/api-client`. Covers install, the Storefront API key and NEXT_PUBLIC_SUBBLY_API_KEY, client initialization, server components and route handlers, and every namespace: product, bundle, cart, checkout and funnels, auth, customers, subscriptions, addresses, wallet, payment intents, pickup info, surveys, metafields, shop, countries, lead and stock. Also covers params, expand, headers, x-currency, pagination, errors, 3-D Secure and customer access tokens. Use when you build a custom or headless storefront, a Next.js or React shop, a customer account page, or when you need the exact method signature, payload or response type. For storefront code only. To read or change a live store (products, orders, subscribers), use the Subbly connector tools instead."
+description: "Helps you write storefront code that calls the Subbly Storefront API with `subblyApi` from `@subbly/react` or with `SubblyApiClient` from `@subbly/api-client`. Covers install, the Storefront API key, client initialization, server rendering and route handlers, and every namespace: product, bundle, cart, checkout and funnels, auth, customers, subscriptions, addresses, wallet, payment intents, pickup info, surveys, metafields, shop, countries, lead and stock. Also covers params, expand, headers, x-currency, pagination, errors, 3-D Secure and customer access tokens. Use when you build a custom or headless storefront, a React shop, a customer account page, or when you need the exact method signature, payload or response type. For storefront code only. To read or change a live store (products, orders, subscribers), use the Subbly connector tools instead."
 ---
 
 # Subbly Storefront API
@@ -11,43 +11,38 @@ description: "Helps you write storefront code that calls the Subbly Storefront A
 
 - **Packages.** Install `@subbly/react` (React 19 is a peer dependency). It re-exports `subblyApi` and every type from `@subbly/api-client`, so import both from `@subbly/react`. Use `@subbly/api-client` directly only in non-React code.
 - **API key.** Use a Storefront API key. Get it on the [API keys](https://subbly.co/admin/settings/api-keys) page in Subbly Admin. The Storefront key is public: the browser sends it with each request. Never put a Private API key in storefront code.
-- **Environment.** Store the key in `NEXT_PUBLIC_SUBBLY_API_KEY`. The `NEXT_PUBLIC_` prefix is necessary in Next.js, because the browser must read the key. `NEXT_PUBLIC_SUBBLY_API_URL` is optional. Set it only for a proxy or a test environment. The default URL is `https://api.subbly.co/storefront/v1/`.
+- **Keep key values out of the chat.** The key belongs to the developer's project. Do not open `.env` or other secret files, and do not print key values. To check that a key is set, ask the user, or check only that the setting name exists.
+- **API URL.** `apiUrl` is optional. Set it only for a proxy or a test environment. The default URL is `https://api.subbly.co/storefront/v1/`.
 - **Read before you write.** Before you write code for a step, read the reference for each method in that step. Check the payload fields and the response type. Do not guess field names.
 
 ## Initialize the client
 
-Initialize the client once, before the first call. A Next.js project usually has this file at `src/lib/subbly/api.ts`:
+Initialize the client once, before the first call. Put it in one module of the project. The examples in these skills import that module as `./subbly`; change the path to match the project.
 
 ```ts
+// subbly.ts
 import { subblyApi } from '@subbly/react'
+import { config } from './config' // the project's public settings
 
-if (!process.env.NEXT_PUBLIC_SUBBLY_API_KEY) {
-  throw new Error('Set NEXT_PUBLIC_SUBBLY_API_KEY in your .env file.')
-}
-
-subblyApi.initialize({
-  apiKey: process.env.NEXT_PUBLIC_SUBBLY_API_KEY,
-  apiUrl: process.env.NEXT_PUBLIC_SUBBLY_API_URL,
-})
+subblyApi.initialize({ apiKey: config.subblyStorefrontKey })
 
 export { subblyApi }
 ```
 
-Import this module in the root layout (`import '@/lib/subbly/api'`), and import `subblyApi` from it in your own code. To install this file and the cart widget script together, run `npx shadcn add https://registry.subbly.dev/r/subbly-lib.json`.
+Import this module once when the app starts, and import `subblyApi` from it in your own code. Read the key from the project's own configuration, the way the project's build tool exposes public values to the browser.
 
 Rules:
 
 - `initialize({ apiKey, apiUrl?, lang? })` runs one time only. A second call does nothing and keeps the first configuration. Use `subblyApi.isInitialized()` to check.
 - `initialize` without `apiKey` throws ``Subbly API missing required `apiKey` option.``
 - A call before `initialize` throws `Subbly API client is access before it was initialized. Call createApiClient to initialize.` If you see this error, make sure the init module loads first.
-- `<SubblyProvider>` also initializes the client from `NEXT_PUBLIC_SUBBLY_API_KEY` and `NEXT_PUBLIC_SUBBLY_API_URL` (or from its `apiKey` and `apiUrl` props), then loads the shop for `useShop()`. Server code does not render the provider, so keep the init module for server code.
+- `<SubblyProvider>` also initializes the client, then loads the shop for `useShop()`. Pass it the same key in its `apiKey` prop (and `apiUrl` if you use one). Code that runs outside React does not render the provider, so keep the init module.
 - For non-React code, create your own client: `new SubblyApiClient({ apiKey })` from `@subbly/api-client`. It has no default expands, and some method names are different (see "Raw client" below).
 
-## Server and client code
+## Server and browser code
 
-- `@subbly/react` has a `react-server` export condition. In a server component or a route handler, `import { subblyApi } from '@subbly/react'` gives the real client, without React hooks.
-- In server code, `subblyApi` is the only runtime value you can use from `@subbly/react`. Every other export (hooks, enums such as `ProductType`, helpers such as `formatMetafieldList`) is a client reference there, and Next.js throws when server code reads it. Type imports (`import type`) are safe. In server code, compare with the string value (`product.type === 'subscription'`), and cast a typed param (`type: 'subscription' as ProductType`). Or move the code into a `'use client'` component.
-- Load catalog data (products, bundles, metafields, shop) on the server when you can. This is better for SEO and for the first render.
+- Catalog calls (products, bundles, metafields, shop) need no customer token, so they can run on a server or in the browser. Load them on the server when the site renders pages there. This is better for SEO and for the first render.
+- `@subbly/react` has a `react-server` export condition for React Server Components. There, `subblyApi` is the only runtime value: hooks, enums such as `ProductType` and helpers such as `formatMetafieldList` are client references. Use `import type` for types, compare with the string value (`product.type === 'subscription'`), and cast a typed param (`type: 'subscription' as ProductType`).
 - The client is a module-level singleton. On the server, one client serves all requests. Do not call `subblyApi.client.setAuth()` on the server, because the token stays on the shared client for the next visitor. On the server, send the customer token per call in `headers` (see "Customer access token").
 - Cart, checkout and customer calls usually run in the browser, where the cart ID and the customer token live in cookies (`subbly_cart_id`, `subbly_access_token`).
 
@@ -87,9 +82,9 @@ Each method returns a Promise. Use `async`/`await`.
 
 **Pagination.** List methods for products, bundles, bundle items, bundle groups, metafields and subscriptions take `page` and `perPage` (1 to 100) and return `{ data, pagination }`. `pagination` has `currentPage`, `lastPage`, `from`, `to` and `total`.
 
-**Amounts.** All amounts are integers in the minor unit of the currency: `1999` is 19.99. Divide by 100 only to display. Use `useCurrencyFormatter` from `@subbly/react` to format.
+**Amounts.** All amounts are integers in the minor unit of the currency: `1999` is 19.99. Use `useCurrencyFormatter` from `@subbly/react` to format them. Do not divide by 100 yourself: some currencies have no minor unit.
 
-**Currency.** Product, bundle, survey and metafield methods accept an `x-currency` header, for example `{ 'x-currency': 'EUR' }`. It prices that one response in another shop currency. The cart has its own `currencyCode`: change it with `cart.update(cartId, { currencyCode })`. Read the shop currencies from `shop.load()` (`currencies[].abbreviation`). For a full multi-currency set-up, see the `subbly-storefront-localization` skill.
+**Currency.** Product, bundle, survey and metafield methods accept an `x-currency` header, for example `{ 'x-currency': 'EUR' }`. It prices that one response in another shop currency. The cart has its own `currencyCode`: change it with `cart.update(cartId, { currencyCode })`. Read the shop currencies from `shop.load()` (`currencies[].abbreviation`).
 
 **Language.** Pass `lang` to `initialize`, or call `subblyApi.client.setLanguage(code)`. The client sends it as `accept-language`. Read the shop languages from `shop.load()` (`languages[].code`).
 
@@ -115,7 +110,7 @@ Each method returns a Promise. Use `async`/`await`.
 - Resource names: `products` (not `product`), with `load`, `loadVariant`, `loadPlan` and `list`. `bundle` has `load`, `loadItems`, `loadGroups`, `list` and `quote`.
 - Only on the raw client: `orders` and `invoices` (`list`, `load`), `cancellations.reasons`, subscription actions (`cancel`, `pause`, `resume`, `skip`, `reactivate` and more), subscription items, `addresses.update` and `delete`, `wallet.setDefault` and `delete`, `pickupInfo.update` and `delete`.
 
-See `customer-api.md` for these methods, and for the account hooks in `@subbly/react` (`useCustomerSubscriptions`, `useSubscriptionActions` and others). Those hooks fetch your own route handlers under `/api/account`, not the Storefront API.
+See `customer-api.md` for these methods.
 
 ## Common flows
 
@@ -123,7 +118,7 @@ See `customer-api.md` for these methods, and for the account hooks in `@subbly/r
 - **Add to cart with the cart widget.** Use `useSubblyCart().addToCart` from the `subbly-cart-and-checkout` skill. Do not call `cart.addItem` directly on a page with the widget: the widget keeps its own copy of the cart and does not see the change.
 - **Headless checkout.** `cart.create` (or `cart.load` with the ID from the `subbly_cart_id` cookie), `cart.addItem`, `cart.update` with customer, address and shipping method, `wallet.setup` and `wallet.store` for the card, then `checkout.purchase`. Read `cart-and-checkout-api.md` first.
 - **Customer account.** `auth.login` or `auth.otp` then `auth.otpLogin`, `setAuth`, then `customers.me` and `subscriptions.list`. Read `customer-api.md` first.
-- **Email capture.** Use the `subbly-lead-capture` skill.
+- **Email capture.** `lead.subscribe` saves an email as a lead. See `catalog.md`.
 
 ## Types
 

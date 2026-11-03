@@ -6,4 +6,4 @@
 - `subbly` connector at `https://mcp.subbly.dev/mcp` with OAuth sign-in.
 - `subbly` entry skill: store model, merchant words, money and safety rules, and which skill to use.
 - Merchant skills: `subbly-catalog`, `subbly-subscriptions`, `subbly-customers-and-orders`, `subbly-coupons`, `subbly-webhooks`, `subbly-store-insights`.
-- Developer skills for `@subbly/react` storefronts: `subbly-storefront-api`, `subbly-storefront-products`, `subbly-storefront-bundles`, `subbly-cart-and-checkout`, `subbly-storefront-metadata`, `subbly-subscription-surveys`, `subbly-lead-capture`, `subbly-storefront-localization`, `subbly-storefront-troubleshooting`.
+- Developer skills for `@subbly/react` storefronts: `subbly-storefront-api`, `subbly-storefront-products`, `subbly-storefront-bundles`, `subbly-cart-and-checkout`, `subbly-storefront-metadata`, `subbly-subscription-surveys`, `subbly-storefront-troubleshooting`.

@@ -16,8 +16,6 @@ An add-on is a one-time variant that the customer adds to a subscription. It shi
 | `1` | The add-on is charged and shipped one time only. |
 
 ```tsx
-'use client'
-
 import { useSubblyCart } from '@subbly/react'
 
 export function AddOnButton({ variantId }: { variantId: number }) {
@@ -69,8 +67,6 @@ A subscription product with `preOrderEndAt` set to a future date is on pre-order
 - Compare the date with today. A past date means the pre-order is over.
 
 ```tsx
-'use client' // ProductType is a runtime value: server components cannot read it from @subbly/react
-
 import { ProductType, type ParentProduct } from '@subbly/react'
 
 export function PreOrderBadge({ product }: { product: ParentProduct }) {

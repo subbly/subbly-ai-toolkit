@@ -19,7 +19,7 @@ Most webhook tools that change something also send real HTTP requests to the end
 4. Get a "yes". `create_webhook_endpoint` **sends a test ping to the URL now**.
 5. The response holds the signing `secret`. It is shown **only once**. Give it to the user and tell them to store it safely, for example in their receiver's secret settings. Do not put it in any other place.
 
-The receiver uses the secret to check the signature of each delivery. Subbly signs deliveries with the [Standard Webhooks](https://www.standardwebhooks.com) scheme. Each event's `data` in `list_webhook_events` has the keys exactly as the receiver gets them; use it to show a developer a real sample.
+The receiver uses the secret to check the signature of each delivery. Subbly signs deliveries with the [Standard Webhooks](https://www.standardwebhooks.com) scheme. Each event's `data` in `list_webhook_events` has the keys exactly as the receiver gets them; use it to show a developer a real sample. An event's `entity` names the record inside the subject that the event is about, for example the item of a `subscription.item.*` event or the discount of a `subscription.discount.*` event (`type` and `id`). It is null when the event names no such record. New `type` values can appear, so tell developers not to reject unknown ones.
 
 ## Change an endpoint
 
@@ -28,7 +28,7 @@ The receiver uses the secret to check the signature of each delivery. Subbly sig
 - **Events:** send `enabledEvents` to replace the list, or `addEvents` and `removeEvents` to edit it. Not both.
 - **Pause:** `status: "disabled"`. Pending deliveries are skipped. This is the safe choice instead of delete.
 - **Resume:** `status: "enabled"`. With `resendSince`, Subbly also sends again the deliveries since that time, **as real requests now**. `meta.resentDeliveries` gives the count. Ask the user for the time, and tell them the receiver gets those events again.
-- **Delete:** `delete_webhook_endpoint` cannot be undone. Pending deliveries are skipped. Past events and deliveries stay in the lists. Explicit "yes".
+- **Delete:** `delete_webhook_endpoint` cannot be undone. Pending deliveries are skipped. Past events and deliveries stay in the lists, and `list_webhook_deliveries` still filters by the deleted endpoint's ID. A deleted endpoint's deliveries cannot be retried. Explicit "yes".
 
 ## Rotate the secret
 
@@ -52,6 +52,6 @@ The receiver uses the secret to check the signature of each delivery. Subbly sig
 ## Test and retry
 
 - `ping_webhook_endpoint` sends a real test event now. Use it after the user fixes the receiver.
-- `retry_webhook_delivery` sends one delivery again now. The delivery must be finished (succeeded, failed or skipped), and the endpoint must be enabled. When the endpoint was disabled and missed many events, enable it with `update_webhook_endpoint`, `status: "enabled"` and `resendSince`, instead of many retries.
+- `retry_webhook_delivery` sends one delivery again now. The delivery must be finished (succeeded, failed or skipped), and the endpoint must be enabled and not deleted. When the endpoint was disabled and missed many events, enable it with `update_webhook_endpoint`, `status: "enabled"` and `resendSince`, instead of many retries.
 
 The receiver can get the same event more than once. Tell developers to make the receiver safe for repeats, by the event ID.

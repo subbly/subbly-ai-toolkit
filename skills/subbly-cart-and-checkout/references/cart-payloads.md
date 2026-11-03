@@ -150,22 +150,18 @@ await updateCart({
 Example: read a referral ID from the URL one time.
 
 ```tsx
-'use client'
-
 import { useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useSubblyCart } from '@subbly/react'
 
 export function ReferralFromUrl() {
-  const params = useSearchParams()
   const { updateCart } = useSubblyCart()
 
   useEffect(() => {
-    const ref = Number(params.get('ref'))
+    const ref = Number(new URLSearchParams(window.location.search).get('ref'))
     if (Number.isInteger(ref) && ref > 0) {
       updateCart({ referralId: ref })?.catch(() => {})
     }
-  }, [params, updateCart])
+  }, [updateCart])
 
   return null
 }
