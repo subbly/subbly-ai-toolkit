@@ -1,0 +1,18 @@
+{
+  "name": "subbly-ai-toolkit",
+  "owner": { "name": "Subbly", "url": "https://www.subbly.co" },
+  "metadata": { "description": "Subbly plugins for Claude" },
+  "plugins": [
+    {
+      "name": "subbly",
+      "source": "./",
+      "description": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
+      "version": "0.1.0",
+      "author": { "name": "Subbly", "url": "https://www.subbly.co" },
+      "license": "MIT",
+      "homepage": "https://docs.subbly.dev",
+      "category": "productivity",
+      "keywords": ["subbly", "subscriptions", "subscription-box", "ecommerce", "mcp", "storefront"]
+    }
+  ]
+}

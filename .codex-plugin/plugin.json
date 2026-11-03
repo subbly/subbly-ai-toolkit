@@ -1,0 +1,32 @@
+{
+  "name": "subbly",
+  "version": "0.1.0",
+  "description": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
+  "author": { "name": "Subbly", "url": "https://www.subbly.co" },
+  "homepage": "https://docs.subbly.dev",
+  "repository": "https://github.com/subbly/subbly-ai-toolkit",
+  "license": "MIT",
+  "keywords": ["subbly", "subscriptions", "subscription-box", "ecommerce", "mcp", "storefront"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Subbly",
+    "shortDescription": "Run your subscription store",
+    "longDescription": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
+    "developerName": "Subbly",
+    "category": "Business & Operations",
+    "capabilities": [],
+    "logo": "./assets/subbly-icon-512.png",
+    "composerIcon": "./assets/subbly-icon-256.png",
+    "brandColor": "#2D5FFF",
+    "websiteURL": "https://www.subbly.co",
+    "privacyPolicyURL": "https://www.subbly.co/privacy",
+    "termsOfServiceURL": "https://www.subbly.co/terms",
+    "supportURL": "https://support.subbly.co/",
+    "defaultPrompt": [
+      "Which subscriptions renew in the next 7 days?",
+      "Create a monthly coffee subscription with 3-, 6- and 12-month plans.",
+      "Add a Subbly product page and cart to my Next.js storefront."
+    ]
+  }
+}
