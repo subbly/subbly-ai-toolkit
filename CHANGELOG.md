@@ -4,6 +4,9 @@
 
 - Removed the version sync and zip scripts, the SVG logos and `package.json` again. The Claude plugin directory refuses them until Subbly is a Verified organization. The files stay in the git history.
 - The Cursor manifest uses the PNG icon.
+- Added a root `mcp.json` and the ChatGPT listing, review cases and country list in `plugin.json` under `extensions.com.openai`.
+- The ChatGPT website link is the Subbly MCP page.
+- The connector is not only for Subbly X merchants. The README, the `subbly` skill and the review notes now say that some tools and fields depend on the plan.
 
 ## 0.1.2
 

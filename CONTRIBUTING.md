@@ -7,7 +7,7 @@ This repo is the public plugin for Claude, ChatGPT/Codex, Cursor, Copilot and Ge
 - This repo is public. Do not add internal URLs, builder-only tools (`tool_run`, `tool_describe`), customer data, keys or private repo content.
 - This repo owns the public skills. Internal Subbly skill sources are reference only: rewrite, do not copy.
 - Skills must work on every host. Refer to connector tools by their bare name (`list_products`). Do not depend on hooks, agents or Claude Code-only features.
-- The connector uses OAuth. `.mcp.json` holds only the URL; never add an `X-API-KEY` header.
+- The connector uses OAuth. `.mcp.json` and `mcp.json` hold only the URL; never add an `X-API-KEY` header. Keep the two files the same server.
 - No telemetry.
 
 ## Skills

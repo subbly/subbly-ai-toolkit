@@ -17,4 +17,4 @@ Paste the section for the directory into its submission form. Keep this file up 
 
 **Safety.** Every connector tool has a title and MCP annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`). The skills tell the assistant to confirm each change, and to get an explicit "yes" before it archives, deletes, cancels or moves money.
 
-**Test account.** The connector is available on the Subbly X plan. Ask Subbly for a reviewer test store: https://support.subbly.co
+**Test account.** The connector works with a Subbly merchant account. Some tools and fields depend on the merchant's plan. Ask Subbly for a reviewer test store: https://support.subbly.co

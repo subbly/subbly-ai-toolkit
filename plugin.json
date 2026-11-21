@@ -7,5 +7,84 @@
   "homepage": "https://docs.subbly.dev",
   "repository": "https://github.com/subbly/subbly-ai-toolkit",
   "license": "MIT",
-  "keywords": ["subbly", "subscriptions", "subscription-box", "ecommerce", "mcp", "storefront"]
+  "keywords": ["subbly", "subscriptions", "subscription-box", "ecommerce", "mcp", "storefront"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Subbly",
+        "shortDescription": "Run your subscription store",
+        "longDescription": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
+        "developerName": "Subbly",
+        "category": "Business & Operations",
+        "capabilities": [],
+        "websiteURL": "https://www.subbly.co/mcp",
+        "supportURL": "https://support.subbly.co/",
+        "privacyPolicyURL": "https://www.subbly.co/privacy",
+        "termsOfServiceURL": "https://www.subbly.co/terms",
+        "defaultPrompt": [
+          "Which subscriptions renew in the next 7 days?",
+          "Create a monthly coffee subscription with 3-, 6- and 12-month plans.",
+          "Add a Subbly product page and cart to my React storefront."
+        ],
+        "brandColor": "#2D5FFF",
+        "composerIcon": "./assets/subbly-icon-256.png",
+        "logo": "./assets/subbly-icon-512.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "List the published subscription products",
+              "prompt": "Which subscription products are published in my Subbly store?",
+              "tools_triggered": "list_products",
+              "expected_behavior": "Calls list_products with type \"subscription\" and published 1. Returns the name of each published subscription product in the test store, or says that there are none. The assistant can call get_shop first to read the store context."
+            },
+            {
+              "description": "List the active subscriptions that are not paused",
+              "prompt": "Show my active Subbly subscriptions that are not paused.",
+              "tools_triggered": "list_subscriptions",
+              "expected_behavior": "Calls list_subscriptions with active 1 and paused 0. Returns the matching subscriptions with their customer and product, or says that there are none. Changes nothing in the store."
+            },
+            {
+              "description": "List the unfulfilled orders that wait for delivery",
+              "prompt": "Which orders in my Subbly store are unfulfilled and awaiting delivery?",
+              "tools_triggered": "list_orders",
+              "expected_behavior": "Calls list_orders with fulfillmentStatuses [\"unfulfilled\"] and statuses [\"awaiting_delivery\"]. Returns the matching orders with their due dates, or says that there are none. Changes nothing in the store."
+            },
+            {
+              "description": "List the past-due invoices",
+              "prompt": "Which invoices in my Subbly store are past due?",
+              "tools_triggered": "list_invoices",
+              "expected_behavior": "Calls list_invoices with statuses [\"past_due\"]. Returns the matching invoices with amounts shown as normal prices in the currency of each invoice, or says that there are none. Does not charge, void or forgive an invoice."
+            },
+            {
+              "description": "List the failed webhook deliveries",
+              "prompt": "Show the webhook deliveries that failed in my Subbly store.",
+              "tools_triggered": "list_webhook_deliveries",
+              "expected_behavior": "Calls list_webhook_deliveries with status \"failed\". Returns the failed deliveries with their event type and endpoint, or says that there are none. Does not retry a delivery unless the user asks."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Refunds are not supported",
+              "prompt": "Refund the last order for jane@example.com."
+            },
+            {
+              "description": "Direct card checkout is not supported",
+              "prompt": "Charge card 4242 4242 4242 4242 for a new coffee subscription."
+            },
+            {
+              "description": "Stores on other platforms are out of scope",
+              "prompt": "List the products in my Shopify store."
+            }
+          ]
+        },
+        "commerce": true,
+        "commerce_description": "The plugin is free and sells nothing to the ChatGPT user. No checkout happens in ChatGPT. Merchants use it to manage records in their own Subbly store, such as products, subscriptions, orders and invoices. A merchant can ask it to charge one of their own customers, for example to take payment for an invoice. That charge is off-session: Subbly makes it with a payment method that the customer already saved with the merchant. The assistant asks for an explicit yes before an action that moves money. Shoppers buy and pay on the merchant's storefront, outside ChatGPT."
+      },
+      "publication": {
+        "countries": ["AU", "BE", "CA", "DK", "FI", "FR", "DE", "HK", "IE", "IT", "LU", "MX", "NL", "NZ", "NO", "PT", "SG", "ES", "SE", "CH", "GB", "US"]
+      }
+    }
+  }
 }

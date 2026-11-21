@@ -8,7 +8,7 @@ The plugin gives the assistant two things:
 - **Skills.** Knowledge about how a Subbly store works, so the assistant picks the right product type, uses the right fields and asks before it changes anything.
 
 > [!NOTE]
-> The connector is available to [Subbly X](https://www.subbly.co/x) merchants. To ask about access, contact [Subbly support](https://support.subbly.co).
+> Some connector tools and fields depend on your Subbly plan. To ask about access, contact [Subbly support](https://support.subbly.co).
 
 ## Install
 
@@ -59,10 +59,11 @@ None. The plugin sends no usage data. The connector calls the Subbly API only wh
 |---|---|
 | `skills/` | One folder for each skill, with a `SKILL.md` and optional `references/` |
 | `.mcp.json` | The `subbly` connector |
+| `mcp.json` | The same connector in the Agent Plugins format (ChatGPT, GitHub Copilot, VS Code) |
 | `.claude-plugin/` | Claude manifest and marketplace |
 | `.codex-plugin/` | ChatGPT and Codex manifest |
 | `.cursor-plugin/` | Cursor manifest |
-| `plugin.json` | Agent Plugins manifest (GitHub Copilot, VS Code) |
+| `plugin.json` | Agent Plugins manifest (GitHub Copilot, VS Code). Holds the ChatGPT listing and review data in `extensions.com.openai` |
 | `gemini-extension.json` | Gemini CLI extension |
 | `server.json` | MCP Registry entry |
 | `assets/` | Listing icons |

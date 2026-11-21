@@ -9,7 +9,7 @@ Subbly runs subscription stores: subscription boxes, memberships, and one-time p
 
 ## Before you start
 
-- **Connection.** The connector signs in with the merchant's Subbly account. If the tools are missing or a call returns `unauthorized`, ask the user to connect or reconnect Subbly in their app's connector settings. The connector is available on the Subbly X plan; point other merchants to https://support.subbly.co.
+- **Connection.** The connector signs in with the merchant's Subbly account. If the tools are missing or a call returns `unauthorized`, ask the user to connect or reconnect Subbly in their app's connector settings. Some tools and fields depend on the merchant's Subbly plan. If a call fails for that reason, tell the user and point them to https://support.subbly.co.
 - **Live data.** Every change goes to the live store and real customers. There is no sandbox.
 - **Read first.** Before a change, load the record with a `get_` or `list_` tool. Never guess IDs, field names or payload shapes; read the tool's input schema.
 
