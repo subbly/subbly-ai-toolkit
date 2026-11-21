@@ -2,6 +2,7 @@
 
 ## 0.1.2
 
+- Added `privacyPolicyUrl` to the Claude manifest.
 - Restored the version sync and zip scripts, the SVG logos and `package.json`. The Claude plugin directory accepts them now that Subbly is a Verified organization.
 
 ## 0.1.1

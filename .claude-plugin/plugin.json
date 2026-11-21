@@ -7,6 +7,7 @@
   "homepage": "https://docs.subbly.dev",
   "repository": "https://github.com/subbly/subbly-ai-toolkit",
   "license": "MIT",
+  "privacyPolicyUrl": "https://www.subbly.co/privacy",
   "icon": "./assets/subbly-icon-512.png",
   "keywords": ["subbly", "subscriptions", "subscription-box", "ecommerce", "mcp", "storefront"]
 }
