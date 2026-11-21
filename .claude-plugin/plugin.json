@@ -2,7 +2,7 @@
   "name": "subbly",
   "displayName": "Subbly",
   "description": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": { "name": "Subbly", "url": "https://www.subbly.co" },
   "homepage": "https://docs.subbly.dev",
   "repository": "https://github.com/subbly/subbly-ai-toolkit",

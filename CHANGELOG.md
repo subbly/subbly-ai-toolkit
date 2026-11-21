@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Added release notes for the ChatGPT listing in `plugin.json`. OpenAI needs them for review.
+- The ChatGPT commerce declaration is now `false`. The plugin sells nothing to the ChatGPT user. The description still says that a merchant can charge their own customer.
+
 ## 0.1.3
 
 - Removed the version sync and zip scripts, the SVG logos and `package.json` again. The Claude plugin directory refuses them until Subbly is a Verified organization. The files stay in the git history.
