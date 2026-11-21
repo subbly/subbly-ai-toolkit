@@ -4,6 +4,6 @@
   "title": "Subbly",
   "description": "Manage a Subbly subscription store: products, subscriptions, customers, orders and more.",
   "repository": { "url": "https://github.com/subbly/subbly-ai-toolkit", "source": "github" },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "remotes": [{ "type": "streamable-http", "url": "https://mcp.subbly.dev/mcp" }]
 }

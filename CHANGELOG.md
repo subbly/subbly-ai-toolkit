@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Removed the files that the Claude plugin directory refuses: the version sync and zip scripts, the SVG logos and `package.json`. The repo now holds only Markdown, JSON and PNG files.
+- The Cursor manifest uses the PNG icon.
+- Added `privacyPolicyUrl` to the Claude manifest.
+- The version is now changed by hand in each manifest. `CONTRIBUTING.md` lists them.
+
 ## 0.1.0
 
 - Manifests for Claude, ChatGPT/Codex, Cursor, Copilot and Gemini. Grok Build reads the Claude manifest.
