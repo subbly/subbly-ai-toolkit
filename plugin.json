@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "subbly",
   "description": "Connect your AI assistant to Subbly, the subscription commerce platform. Manage products, bundles, subscriptions, customers, orders, coupons and webhooks in your store, and build custom storefronts with the Subbly SDK and cart widget.",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "author": { "name": "Subbly", "url": "https://www.subbly.co" },
   "homepage": "https://docs.subbly.dev",
   "repository": "https://github.com/subbly/subbly-ai-toolkit",

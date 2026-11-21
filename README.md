@@ -65,19 +65,18 @@ None. The plugin sends no usage data. The connector calls the Subbly API only wh
 | `plugin.json` | Agent Plugins manifest (GitHub Copilot, VS Code) |
 | `gemini-extension.json` | Gemini CLI extension |
 | `server.json` | MCP Registry entry |
-| `assets/` | Listing icons |
+| `assets/` | Logos |
+| `scripts/` | Version sync and zip build |
 
 ## Develop
 
 ```
-claude plugin validate --strict .   # check the Claude manifests
-claude --plugin-dir .               # load the plugin in Claude Code for one session
-git archive --format=zip -o dist/subbly-<version>.zip HEAD   # zip for upload
+npm run validate     # check manifest versions, then claude plugin validate --strict
+npm run build        # dist/subbly-<version>.zip for upload
+claude --plugin-dir .   # load the plugin in Claude Code for one session
 ```
 
-The repo holds only Markdown, JSON and PNG files. The Claude plugin directory refuses scripts, SVG files and a `package.json` with `scripts`, so keep tooling out of this repo.
-
-To release, change `version` in each manifest (see [CONTRIBUTING.md](CONTRIBUTING.md)), add a `CHANGELOG.md` entry, then validate.
+To release, change `version` in `package.json`, run `npm run version:sync`, add a `CHANGELOG.md` entry, then build.
 
 ## Links
 

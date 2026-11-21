@@ -22,25 +22,4 @@ This repo is the public plugin for Claude, ChatGPT/Codex, Cursor, Copilot and Ge
 
 ## Versions
 
-The version is in seven places. Change them together:
-
-- `plugin.json`
-- `.claude-plugin/plugin.json`
-- `.claude-plugin/marketplace.json` (the `subbly` entry)
-- `.codex-plugin/plugin.json`
-- `.cursor-plugin/plugin.json`
-- `gemini-extension.json`
-- `server.json`
-
-Check that they agree, then validate:
-
-```
-grep -rn '"version"' --include='*.json' .
-claude plugin validate --strict .
-```
-
-Add a `CHANGELOG.md` entry for each release.
-
-## Files the directory accepts
-
-The Claude plugin directory reads the full repo. Add only Markdown, text, JSON, YAML and PNG files. Do not add scripts (`.sh`, `.mjs`, `.js`), SVG files, lockfiles or a `package.json` with `scripts`.
+`package.json` holds the version. Run `npm run version:sync` after a change, then `npm run validate`. Add a `CHANGELOG.md` entry for each release.
