@@ -1,9 +1,14 @@
 # Changelog
 
+## 0.1.3
+
+- Removed the version sync and zip scripts, the SVG logos and `package.json` again. The Claude plugin directory refuses them until Subbly is a Verified organization. The files stay in the git history.
+- The Cursor manifest uses the PNG icon.
+
 ## 0.1.2
 
 - Added `privacyPolicyUrl` to the Claude manifest.
-- Restored the version sync and zip scripts, the SVG logos and `package.json`. The Claude plugin directory accepts them now that Subbly is a Verified organization.
+- Restored the version sync and zip scripts, the SVG logos and `package.json`. The Claude plugin directory still refused them, so 0.1.3 removes them again.
 
 ## 0.1.1
 

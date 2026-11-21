@@ -13,7 +13,7 @@ Paste the section for the directory into its submission form. Keep this file up 
 - The developer skills (`subbly-storefront-*`, `subbly-cart-and-checkout`, `subbly-subscription-surveys`) describe code that a developer writes in their own storefront with the public npm packages `@subbly/react` and `@subbly/api-client`. That code uses a public Subbly Storefront API key, which the developer's site sends only to Subbly (`api.subbly.co`). The plugin never uses this key.
 - These skills tell the assistant not to open `.env` or other secret files and not to print key values.
 
-**Images.** The only images are the two listing icons in `assets/` that the manifests name. Nothing runs them. They are plain RGBA images with only the `IHDR`, `IDAT` and `IEND` chunks and no data after the end marker. `scripts/` holds repository tooling: the version sync reads and writes the manifest JSON files, and never opens the images.
+**Images.** The only images are the two listing icons in `assets/` that the manifests name. Nothing runs them. They are plain RGBA images with only the `IHDR`, `IDAT` and `IEND` chunks and no data after the end marker. The repository holds no scripts or other programs.
 
 **Safety.** Every connector tool has a title and MCP annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`). The skills tell the assistant to confirm each change, and to get an explicit "yes" before it archives, deletes, cancels or moves money.
 
